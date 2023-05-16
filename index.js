@@ -172,7 +172,7 @@ app.post("/edit-username", (req, res) => {
     );
 });
 
-app.post("/edit-password", async (req, res) => {
+app.post("/edit-password", (req, res) => {
     if (req.query.password != process.env.ADMIN_PASSWORD) {
         return res.status(401).json({ error: "Invalid password" });
     }
@@ -182,6 +182,14 @@ app.post("/edit-password", async (req, res) => {
     res.json(
         db.prepare("UPDATE users SET password = ? WHERE username = ?").run(password, username)
     );
+});
+
+app.get("/attempts", (req, res) => {
+    if (req.query.password != process.env.ADMIN_PASSWORD) {
+        return res.status(401).json({ error: "Invalid password" });
+    }
+
+    res.json(db.prepare("SELECT * FROM attempts").all());
 });
 
 app.get("/test", (_, res) => {
