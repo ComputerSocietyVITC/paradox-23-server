@@ -30,7 +30,7 @@ const db = createDatabase("paradox.sqlite3");
 
 app.use(Express.json());
 
-app.post("/register", cors(corsOptions), async (req, res) => {
+app.post("/register", async (req, res) => {
     const { username = "", password = "", avatar = "" } = req.body;
 
     try {
@@ -58,7 +58,7 @@ app.post("/register", cors(corsOptions), async (req, res) => {
 
 const [login, authorize] = useJwt(process.env.JWT_SECRET, "HS256", "2d");
 
-app.post("/login", cors(corsOptions), async (req, res) => {
+app.post("/login", async (req, res) => {
     const { username = "", password = "" } = req.body;
 
     const user = db.prepare("SELECT * FROM users WHERE username = ?").get(username);
