@@ -106,6 +106,6 @@ app.get('/test', (_, res) => {
 })
 
 app.listen(
-    3000,
-    console.log("Server started on port 3000.")
+    8080,
+    console.log("Server started on port 8080.")
 )
