@@ -1,4 +1,5 @@
 const Express = require("express");
+const morgan = require("morgan");
 const { Password, cacher, createDatabase, useJwt } = require("./utils");
 
 require("dotenv").config()
@@ -6,7 +7,10 @@ require("dotenv").config()
 if (!process.env.JWT_SECRET) throw new Error("Missing Environment Variable JWT_SECRET");
 
 const app = Express();
+const nginxFormat =
+    ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status';
 
+app.use(morgan(nginxFormat));
 
 const db = createDatabase("paradox.sqlite3");
 
