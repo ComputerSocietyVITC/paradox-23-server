@@ -5,7 +5,7 @@
   "repository": "https://github.com/ComputerSocietyVITC/paradox-23.git",
   "private": true,
   "scripts": {
-    "start": "touch paradox.sqlite && chmod 644 paradox.sqlite && node index.js"
+    "start": "touch paradox.sqlite3 && chmod 644 paradox.sqlite3 && node index.js"
   },
   "dependencies": {
     "better-sqlite3": "^8.0.1",
