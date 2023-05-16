@@ -16,6 +16,11 @@ app.use(cors({
     methods: ['GET', 'POST'],
 }));
 
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    next();
+});
+
 const nginxFormat =
     ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status';
 
