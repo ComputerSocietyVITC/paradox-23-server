@@ -101,6 +101,10 @@ const leaderboardStmt = db.prepare(
 );
 const leaderboard = cacher(60)(() => leaderboardStmt.all());
 app.get("/leaderboard", (_, res) => res.json(leaderboard()));
+app.get('/test', (_, res) => {
+    res.send({ "Message": "Server is up and running" })
+})
+
 app.listen(
     3000,
     console.log("Server started on port 3000.")
