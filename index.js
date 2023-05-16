@@ -56,11 +56,8 @@ app.post("/login", async (req, res) => {
     res.json({ token });
 });
 
-app.get("/me", (req, res) => {
-    const user = db
-                .prepare("SELECT username, level FROM users WHERE username = ?")
-                .get(req.username);
-    return res.json({ user });
+app.get("/me", authorize, (req, res) => {
+    res.json(db.prepare("SELECT username, level FROM users WHERE username = ?").get(req.username));
 });
 
 app.get("/question", authorize, (req, res) => {
