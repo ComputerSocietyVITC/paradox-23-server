@@ -3,21 +3,21 @@ const cors = require("cors");
 const morgan = require("morgan");
 const { Password, cacher, createDatabase, useJwt } = require("./utils");
 
-require("dotenv").config()
-
-
+require("dotenv").config();
 
 if (!process.env.JWT_SECRET) throw new Error("Missing Environment Variable JWT_SECRET");
 
 const app = Express();
 
-app.use(cors({
-    origin: 'https://paradox-23.ieeecsvitc.com',
-    methods: ['GET', 'POST'],
-}));
+app.use(
+    cors({
+        origin: "https://paradox-23.ieeecsvitc.com",
+        methods: ["GET", "POST"],
+    })
+);
 
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'https://paradox-23.ieeecsvitc.com');
+    res.setHeader("Access-Control-Allow-Origin", "https://paradox-23.ieeecsvitc.com");
     next();
 });
 
@@ -115,11 +115,77 @@ const leaderboardStmt = db.prepare(
 );
 const leaderboard = cacher(60)(() => leaderboardStmt.all());
 app.get("/leaderboard", (_, res) => res.json(leaderboard()));
-app.get('/test', (_, res) => {
-    res.send({ "Message": "Server is up and running" })
-})
 
-app.listen(
-    8080,
-    console.log("Server started on port 8080.")
-)
+app.post("/add-question", (req, res) => {
+    if (req.query.password != process.env.ADMIN_PASSWORD) {
+        return res.status(401).json({ error: "Invalid password" });
+    }
+
+    const { level, text, image, answer } = req.body;
+
+    res.json(
+        db
+            .prepare(
+                "INSERT INTO questions (level, text, image, answer) VALUES (?, ?, ?, ?) RETURNING *"
+            )
+            .get(level, text, image, answer)
+    );
+});
+
+app.post("/delete-question", (req, res) => {
+    if (req.query.password != process.env.ADMIN_PASSWORD) {
+        return res.status(401).json({ error: "Invalid password" });
+    }
+
+    const { level } = req.body;
+
+    res.json(db.prepare("DELETE FROM questions WHERE level = ?").run(level));
+});
+
+app.get("/all-questions", (req, res) => {
+    if (req.query.password != process.env.ADMIN_PASSWORD) {
+        return res.status(401).json({ error: "Invalid password" });
+    }
+
+    res.json(db.prepare("SELECT * FROM questions").all());
+});
+
+app.post("/delete-user", (req, res) => {
+    if (req.query.password != process.env.ADMIN_PASSWORD) {
+        return res.status(401).json({ error: "Invalid password" });
+    }
+
+    const { username } = req.body;
+
+    res.json(db.prepare("DELETE FROM users WHERE username = ?").run(username));
+});
+
+app.post("/edit-username", (req, res) => {
+    if (req.query.password != process.env.ADMIN_PASSWORD) {
+        return res.status(401).json({ error: "Invalid password" });
+    }
+
+    const { username, newUsername } = req.body;
+
+    res.json(
+        db.prepare("UPDATE users SET username = ? WHERE username = ?").run(newUsername, username)
+    );
+});
+
+app.post("/edit-password", async (req, res) => {
+    if (req.query.password != process.env.ADMIN_PASSWORD) {
+        return res.status(401).json({ error: "Invalid password" });
+    }
+
+    const { username, password } = req.body;
+
+    res.json(
+        db.prepare("UPDATE users SET password = ? WHERE username = ?").run(password, username)
+    );
+});
+
+app.get("/test", (_, res) => {
+    res.send({ Message: "Server is up and running" });
+});
+
+app.listen(8080, console.log("Server started on port 8080."));
