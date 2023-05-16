@@ -1,12 +1,21 @@
 const Express = require("express");
+const cors = require("cors");
 const morgan = require("morgan");
 const { Password, cacher, createDatabase, useJwt } = require("./utils");
 
 require("dotenv").config()
 
+
+
 if (!process.env.JWT_SECRET) throw new Error("Missing Environment Variable JWT_SECRET");
 
 const app = Express();
+
+app.use(cors({
+    origin: 'http://paradox-23.ieeecsvitc.com',
+    methods: ['GET', 'POST'],
+}));
+
 const nginxFormat =
     ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status';
 
