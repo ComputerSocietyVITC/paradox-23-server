@@ -12,12 +12,12 @@ if (!process.env.JWT_SECRET) throw new Error("Missing Environment Variable JWT_S
 const app = Express();
 
 app.use(cors({
-    origin: 'http://paradox-23.ieeecsvitc.com',
+    origin: 'https://paradox-23.ieeecsvitc.com',
     methods: ['GET', 'POST'],
 }));
 
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://paradox-23.ieeecsvitc.com');
+    res.setHeader('Access-Control-Allow-Origin', 'https://paradox-23.ieeecsvitc.com');
     next();
 });
 
