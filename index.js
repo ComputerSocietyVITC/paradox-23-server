@@ -1,5 +1,4 @@
 const Express = require("express");
-const cors = require("cors");
 const morgan = require("morgan");
 const { Password, cacher, createDatabase, useJwt } = require("./utils");
 
