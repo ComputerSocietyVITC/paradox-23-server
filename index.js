@@ -16,10 +16,6 @@ app.use(
     })
 );
 
-app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "https://paradox-23.ieeecsvitc.com");
-    next();
-});
 
 const nginxFormat =
     ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status';
