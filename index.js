@@ -9,16 +9,6 @@ if (!process.env.JWT_SECRET) throw new Error("Missing Environment Variable JWT_S
 
 const app = Express();
 
-const corsOptions = {
-    origin: "https://paradox-23.ieeecsvitc.com/*",
-    methods: ["GET", "POST"]
-};
-
-app.use(
-    cors(corsOptions)
-);
-
-
 const nginxFormat =
     ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status';
 
