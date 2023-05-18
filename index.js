@@ -10,9 +10,13 @@ if (!process.env.JWT_SECRET) throw new Error("Missing Environment Variable JWT_S
 const app = Express();
 
 const corsOptions = {
-    origin: "https://paradox-23.ieeecsvitc.com",
+    origin: "https://paradox-23.ieeecsvitc.com/*",
     methods: ["GET", "POST"]
 };
+
+app.use(
+    cors(corsOptions)
+);
 
 
 const nginxFormat =
@@ -24,7 +28,7 @@ const db = createDatabase("paradox.sqlite3");
 
 app.use(Express.json());
 
-app.post("/register", cors(corsOptions) ,async (req, res) => {
+app.post("/register", async (req, res) => {
     const { username = "", password = "", avatar = "" } = req.body;
 
     try {
@@ -52,7 +56,7 @@ app.post("/register", cors(corsOptions) ,async (req, res) => {
 
 const [login, authorize] = useJwt(process.env.JWT_SECRET, "HS256", "2d");
 
-app.post("/login", cors(corsOptions), async (req, res) => {
+app.post("/login", async (req, res) => {
     const { username = "", password = "" } = req.body;
 
     const user = db.prepare("SELECT * FROM users WHERE username = ?").get(username);
